@@ -12,7 +12,7 @@ RUN echo \
 RUN apt-get update -y
 RUN apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 RUN usermod -aG docker abc
-COPY init /init
+# COPY init /init
 RUN chmod +x /init
 
 # Add node version manager
@@ -20,9 +20,7 @@ RUN chown abc /config
 USER abc
 WORKDIR /config
 RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash 
-RUN echo -e '# load nvm' >> /config/.bashrc
-RUN echo -e 'export NVM_DIR="\$HOME/.nvm"' >> /config/.bashrc
-RUN echo -e '[ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"' >> /config/.bashrc
+COPY bashrc /config/.bashrc
 
 # Add python
 USER root

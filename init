@@ -29,11 +29,6 @@ addpath /usr/bin
 addpath /command
 export PATH
 
-# This is additional command for docker
-# if [ -e /var/run/docker.sock ]; then 
-#     chown :docker /var/run/docker.sock;
-# fi
-
 # Now we're good: s6-overlay-suexec is accessible via PATH, as are
 # all our binaries.
 # Run preinit as root, then run stage0 as the container's user (can be
