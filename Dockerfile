@@ -3,7 +3,6 @@ FROM lscr.io/linuxserver/code-server:latest
 # Add docker
 RUN apt-get update -y
 RUN apt-get install ca-certificates curl gnupg -y
-# RUN apt-get install -m 0755 -d /etc/apt/keyrings -y
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 RUN chmod a+r /etc/apt/keyrings/docker.gpg
 RUN echo \
@@ -13,14 +12,23 @@ RUN echo \
 RUN apt-get update -y
 RUN apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 RUN usermod -aG docker abc
+COPY init /init
+RUN chmod +x /init
 
 # Add node version manager
 RUN chown abc /config
 USER abc
 WORKDIR /config
 RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash 
+RUN echo -e '# load nvm' >> /config/.bashrc
+RUN echo -e 'export NVM_DIR="\$HOME/.nvm"' >> /config/.bashrc
+RUN echo -e '[ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"' >> /config/.bashrc
 
 # Add python
 USER root
 RUN apt-get install python3 -y
+
+# Set default user to abc
+ENV PUID=1000
+ENV PGID=1000
 
